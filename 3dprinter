@@ -1,0 +1,39 @@
+#!/usr/bin/python3
+
+import requests
+import time
+
+
+global flagcheck
+#flagcheck = False
+def check_status():
+    global flagcheck
+    flagcheck = False
+    resp = requests.get('http://192.168.0.104/api/job', headers={'X-Api-Key': 'ABA6A5E42A044CC596F1AA46C611A58F'})
+
+    val_parsed = resp.json()
+
+    current_state = val_parsed["state"]
+
+    #Will be changed to printing
+    if(current_state == "Operational"):
+        flagcheck = True
+        #print("Flag is enabled")
+    else:
+        flagcheck = False
+
+    print(val_parsed)
+    print(flagcheck)
+    return val_parsed
+
+if __name__ == "__main__":
+    value = check_status()
+    print(flagcheck)
+
+    if(value["state"] == "Operational"):
+        while(flagcheck):
+            time.sleep(2)
+            print("3D Drucker is Online")
+            check_status()
+
+
